@@ -26,7 +26,7 @@ jobs:
       with:
         node-version: 20
         cache: 'npm'
-        # 👇 CHANGE 2: Tell Node to prepare for the public registry
+        # Tell Node to prepare for the public registry
         registry-url: 'https://registry.npmjs.org'
 
     - name: Install Dependencies
@@ -35,10 +35,12 @@ jobs:
     - name: Build Packages
       run: npm run build
 
-    # 👇 CHANGE 3 (Optional but recommended): Enable Provenance
-    # This links your package on npm back to this exact GitHub run
+    # This links package on npm back to this exact GitHub run
     - name: Configure npm provenance
       run: echo "provenance=true" >> .npmrc
+
+    - name: Clear auth token for OIDC
+      run: echo "NODE_AUTH_TOKEN=" >> ${{ env.GITHUB_ENV }}
 
     - name: Create Release Pull Request or Publish to npm
       id: changesets
