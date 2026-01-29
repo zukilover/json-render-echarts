@@ -50,6 +50,3 @@ jobs:
         title: "chore: version packages"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # We pass this dummy string so Changesets doesn't crash.
-        # 'setup-node' (above) handles the REAL auth automatically.
-        NPM_TOKEN: "placeholder"
