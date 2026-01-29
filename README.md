@@ -1,4 +1,4 @@
-# json-render-echarts 📊
+# json-render-echarts
 
 `json-render` catalog for [Apache ECharts](https://echarts.apache.org/).
 
