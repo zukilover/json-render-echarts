@@ -26,8 +26,6 @@ jobs:
       with:
         node-version: 22
         cache: 'npm'
-        # Tell Node to prepare for the public registry
-        registry-url: 'https://registry.npmjs.org'
 
     - name: Install Dependencies
       run: npm ci # 'ci' is safer/faster for CI than 'install'
@@ -36,8 +34,11 @@ jobs:
       run: npm run build
 
     # This links package on npm back to this exact GitHub run
-    - name: Configure npm provenance
-      run: echo "provenance=true" >> .npmrc
+    - name: Configure npm for OIDC
+      run: |
+        echo "//registry.npmjs.org/:_authToken=" > .npmrc
+        echo "registry=https://registry.npmjs.org/" >> .npmrc
+        echo "provenance=true" >> .npmrc
 
     - name: Create Release Pull Request or Publish to npm
       id: changesets
