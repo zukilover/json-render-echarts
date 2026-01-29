@@ -28,26 +28,19 @@ jobs:
         cache: 'npm'
 
     - name: Install Dependencies
-      run: npm ci # 'ci' is safer/faster for CI than 'install'
+      run: npm ci
 
     - name: Build Packages
       run: npm run build
-
-    # This links package on npm back to this exact GitHub run
-    - name: Configure npm for OIDC
-      run: |
-        echo "//registry.npmjs.org/:_authToken=" > .npmrc
-        echo "registry=https://registry.npmjs.org/" >> .npmrc
-        echo "provenance=true" >> .npmrc
 
     - name: Create Release Pull Request or Publish to npm
       id: changesets
       uses: changesets/action@v1
       with:
-        # Use the script we added to package.json earlier
         publish: npm run release
         commit: "chore: version packages"
         title: "chore: version packages"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NODE_AUTH_TOKEN: ""
+        NPM_CONFIG_PROVENANCE: "true"
+        NPM_CONFIG_REGISTRY: "https://registry.npmjs.org"
