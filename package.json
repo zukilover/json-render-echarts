@@ -11,7 +11,7 @@
     "test": "npm run test --workspaces",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "changeset publish"
+    "release": "changeset publish --use-npmrc .npmrc"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.2",
