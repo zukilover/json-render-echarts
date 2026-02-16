@@ -1,6 +1,36 @@
 import { EChartsOption } from 'echarts-for-react';
 import { BaseChartProps } from './types';
 
+/** Props consumed by getCommonOptions; chart-specific props are the rest. */
+const BASE_CHART_PROP_KEYS = new Set([
+  'height',
+  'darkMode',
+  'backgroundColor',
+  'color',
+  'animation',
+  'textStyle',
+  'title',
+  'legend',
+  'tooltip',
+  'toolbox',
+  'grid',
+  'dataZoom',
+  'visualMap',
+  'singleAxis',
+  'aria',
+]);
+
+/**
+ * Build full ECharts option: common options + rest of props (chart-specific option fragment).
+ */
+export const getChartOption = (props: BaseChartProps): EChartsOption => {
+  const commonOptions = getCommonOptions(props);
+  const rest = Object.fromEntries(
+    Object.entries(props).filter(([key]) => !BASE_CHART_PROP_KEYS.has(key))
+  ) as EChartsOption;
+  return { ...commonOptions, ...rest };
+};
+
 /**
  * Helper to generate common ECharts options from BaseChartProps
  */

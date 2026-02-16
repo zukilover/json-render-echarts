@@ -90,11 +90,11 @@ npm run build
 
 To create a new version of the packages:
 
-1. Run `npx changeset` to describe your changes.
+1. Run `npm run changeset` to describe your changes.
 2. Commit the generated changeset file.
-3. When ready to publish, run `npx changeset version` to bump versions and update changelogs.
+3. When ready to publish, run `npm run changeset version` to bump versions and update changelogs.
 4. Commit the changes.
-5. Run `npx changeset publish` to publish the packages to npm.
+5. Run `npm run changeset publish` to publish the packages to npm.
 
 ## License
 

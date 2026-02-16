@@ -1,12 +1,21 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
 import { unknownRecord } from '../shared';
 
-// --- Theme River Chart ---
-export const ThemeRiverChartSchema = BaseChartSchema.extend({
-  series: z.array(z.object({
-    data: z.array(z.tuple([z.string(), z.number(), z.string()])),
+const ThemeRiverDataSchema = z.tuple([z.string(), z.number(), z.string()]);
+
+/** Theme river series: type 'themeRiver', data as [date, value, name][], emphasis. */
+const ThemeRiverSeriesSchema = z
+  .object({
+    name: z.string().optional(),
+    type: z.literal('themeRiver').optional(),
+    data: z.array(ThemeRiverDataSchema),
     emphasis: unknownRecord.optional(),
-  })),
+  })
+  .catchall(z.unknown());
+
+/** Theme river chart: ECharts option fragment (series). Base props provide tooltip, legend, singleAxis. */
+export const ThemeRiverChartSchema = BaseChartSchema.extend({
+  series: z.array(ThemeRiverSeriesSchema).optional(),
 });
-export interface ThemeRiverChartProps extends BaseChartProps, z.infer<typeof ThemeRiverChartSchema> {}
+export type ThemeRiverChartSchema = z.infer<typeof ThemeRiverChartSchema>;

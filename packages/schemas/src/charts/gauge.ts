@@ -1,13 +1,21 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
 
-// --- Gauge Chart ---
+const GaugeDataSchema = z.object({ name: z.string(), value: z.number() });
+
+/** Gauge series: type 'gauge', data (name/value), optional min/max. */
+const GaugeSeriesSchema = z
+  .object({
+    name: z.string().optional(),
+    type: z.literal('gauge').optional(),
+    data: z.array(GaugeDataSchema),
+    min: z.number().optional(),
+    max: z.number().optional(),
+  })
+  .catchall(z.unknown());
+
+/** Gauge chart: ECharts option fragment (series). */
 export const GaugeChartSchema = BaseChartSchema.extend({
-  data: z.array(z.object({
-    name: z.string(),
-    value: z.number(),
-  })),
-  min: z.number().optional(),
-  max: z.number().optional(),
+  series: z.array(GaugeSeriesSchema).optional(),
 });
-export interface GaugeChartProps extends BaseChartProps, z.infer<typeof GaugeChartSchema> {}
+export type GaugeChartSchema = z.infer<typeof GaugeChartSchema>;

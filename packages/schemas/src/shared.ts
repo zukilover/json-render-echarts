@@ -8,10 +8,10 @@ import z from 'zod';
  * Validates strictly as string or number without using z.union internally.
  * Prevents combinatorial explosion on simple CSS-like properties.
  */
-export const stringOrNumber = z.custom<string | number>(
-  (val) => typeof val === 'string' || typeof val === 'number',
-  'Must be string or number'
-);
+export const stringOrNumber = z.union([
+  z.string(), 
+  z.number()
+]);
 
 /**
  * Validates arrays of numbers or strings (common in Axis data)
@@ -100,7 +100,7 @@ export const NormalizedLegendSchema = z.preprocess(
 export const TooltipSchema = z.object({
   show: z.boolean().optional(),
   trigger: z.enum(['item', 'axis', 'none']).optional(),
-  formatter: z.custom<string | ((params: unknown) => string)>().optional(), // Allow function or string
+  formatter: z.string().optional(),
 });
 
 export const NormalizedTooltipSchema = z.preprocess(

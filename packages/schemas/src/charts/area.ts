@@ -1,14 +1,21 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
+import { AxisSchema, unknownRecord } from '../shared';
 
-// --- Area Chart ---
-export const AreaChartSchema = BaseChartSchema.extend({
-  labels: z.array(z.string()),
-  series: z.array(z.object({
-    name: z.string(),
+/** Area series: line with areaStyle (type 'line', areaStyle, stack). */
+const AreaSeriesSchema = z
+  .object({
+    name: z.string().optional(),
     data: z.array(z.number()),
-    stacked: z.boolean().default(true),
-    type: z.literal('area').default('area'),
-  })),
+    type: z.literal('line').optional(),
+    areaStyle: unknownRecord.optional(),
+    stack: z.string().optional(),
+  });
+
+/** Area chart: ECharts option fragment (xAxis, yAxis, series). */
+export const AreaChartSchema = BaseChartSchema.extend({
+  xAxis: AxisSchema.optional(),
+  yAxis: AxisSchema.optional(),
+  series: z.array(AreaSeriesSchema).optional(),
 });
-export interface AreaChartProps extends BaseChartProps, z.infer<typeof AreaChartSchema> {}
+export type AreaChartSchema = z.infer<typeof AreaChartSchema>;

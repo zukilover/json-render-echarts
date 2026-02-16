@@ -1,10 +1,19 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
+import { AxisSchema } from '../shared';
 
-// --- Bar Chart ---
+/** Bar series: type 'bar', data array, optional realtimeSort. */
+const BarSeriesSchema = z
+  .object({
+    type: z.literal('bar').optional(),
+    data: z.array(z.number()),
+    realtimeSort: z.boolean().optional(),
+  });
+
+/** Bar chart: ECharts option fragment (xAxis, yAxis, series). */
 export const BarChartSchema = BaseChartSchema.extend({
-  labels: z.array(z.string()),
-  values: z.array(z.number()),
-  horizontal: z.boolean().default(false),
+  xAxis: AxisSchema.optional(),
+  yAxis: AxisSchema.optional(),
+  series: z.array(BarSeriesSchema).optional(),
 });
-export interface BarChartProps extends BaseChartProps, z.infer<typeof BarChartSchema> {}
+export type BarChartSchema = z.infer<typeof BarChartSchema>;

@@ -1,12 +1,30 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
+import { AxisSchema } from '../shared';
+import { unknownRecord } from '../shared';
 
-// --- Heatmap Chart ---
+/** Heatmap data: [xIndex, yIndex, value] where value is number or string (e.g. '-'). */
+const HeatmapDataSchema = z.tuple([
+  z.number(),
+  z.number(),
+  z.union([z.number(), z.string()]),
+]);
+
+/** Heatmap series: type 'heatmap', data array, optional label/emphasis. */
+const HeatmapSeriesSchema = z
+  .object({
+    name: z.string().optional(),
+    type: z.literal('heatmap').optional(),
+    data: z.array(HeatmapDataSchema),
+    label: unknownRecord.optional(),
+    emphasis: unknownRecord.optional(),
+  })
+  .catchall(z.unknown());
+
+/** Heatmap chart: ECharts option fragment (xAxis, yAxis, series). */
 export const HeatmapChartSchema = BaseChartSchema.extend({
-  xAxisData: z.array(z.string()),
-  yAxisData: z.array(z.string()),
-  data: z.array(z.tuple([z.number(), z.number(), z.number()])),
-  min: z.number().optional(),
-  max: z.number().optional(),
+  xAxis: AxisSchema.catchall(z.unknown()).optional(),
+  yAxis: AxisSchema.catchall(z.unknown()).optional(),
+  series: z.array(HeatmapSeriesSchema).optional(),
 });
-export interface HeatmapChartProps extends BaseChartProps, z.infer<typeof HeatmapChartSchema> {}
+export type HeatmapChartSchema = z.infer<typeof HeatmapChartSchema>;

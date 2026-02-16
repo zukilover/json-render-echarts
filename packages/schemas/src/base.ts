@@ -10,10 +10,7 @@ import {
   stringOrNumber,
 } from './shared';
 
-// ==========================================
-// 4. BASE CHART SCHEMA
-// ==========================================
-
+/** Base chart schema: height, title, legend, tooltip, grid, and shared ECharts options. */
 export const BaseChartSchema = z.object({
   // General
   height: z.number().describe('Height in pixels'),
@@ -33,8 +30,8 @@ export const BaseChartSchema = z.object({
   // Arrays are naturally union-free, so no normalizer needed
   dataZoom: z.array(z.object({
     type: z.enum(['inside', 'slider']),
-    xAxisIndex: z.custom<number | number[]>((val) => typeof val === 'number' || Array.isArray(val)).optional(),
-    yAxisIndex: z.custom<number | number[]>((val) => typeof val === 'number' || Array.isArray(val)).optional(),
+    xAxisIndex: z.array(z.number()).optional(),
+    yAxisIndex: z.array(z.number()).optional(),
   })).optional(),
 
   visualMap: z.array(unknownRecord).optional(),
@@ -54,5 +51,4 @@ export const BaseChartSchema = z.object({
   }).optional(),
 });
 
-// CRITICAL: Extract interface here to prevent type inlining
-export interface BaseChartProps extends z.infer<typeof BaseChartSchema> {}
+export type BaseChartSchema = z.infer<typeof BaseChartSchema>;

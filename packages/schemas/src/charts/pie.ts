@@ -1,12 +1,19 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
 
-// --- Pie Chart ---
+const PieDataSchema = z.object({ name: z.string(), value: z.number() });
+
+/** Pie series: type 'pie', name/value data, optional radius (string or [inner, outer] for donut). */
+const PieSeriesSchema = z
+  .object({
+    type: z.literal('pie').optional(),
+    data: z.array(PieDataSchema),
+    radius: z.union([z.string(), z.tuple([z.string(), z.string()])]).optional(),
+  })
+  .catchall(z.unknown());
+
+/** Pie chart: ECharts option fragment (series). */
 export const PieChartSchema = BaseChartSchema.extend({
-  data: z.array(z.object({
-    name: z.string(),
-    value: z.number(),
-  })),
-  donut: z.boolean().default(false),
+  series: z.array(PieSeriesSchema).optional(),
 });
-export interface PieChartProps extends BaseChartProps, z.infer<typeof PieChartSchema> {}
+export type PieChartSchema = z.infer<typeof PieChartSchema>;

@@ -1,14 +1,21 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
+import { AxisSchema } from '../shared';
 
-// --- Line Chart ---
-export const LineChartSchema = BaseChartSchema.extend({
-  labels: z.array(z.string()),
-  series: z.array(z.object({
-    name: z.string(),
+/** Line series: type 'line', data array, optional name and smooth. */
+const LineSeriesSchema = z
+  .object({
+    name: z.string().optional(),
     data: z.array(z.number()),
-    smooth: z.boolean().default(false),
-    type: z.literal('line').default('line'),
-  })),
+    type: z.literal('line').optional(),
+    smooth: z.boolean().optional(),
+  })
+  .catchall(z.unknown());
+
+/** Line chart: ECharts option fragment (xAxis, yAxis, series). */
+export const LineChartSchema = BaseChartSchema.extend({
+  xAxis: AxisSchema.catchall(z.unknown()).optional(),
+  yAxis: AxisSchema.catchall(z.unknown()).optional(),
+  series: z.array(LineSeriesSchema).optional(),
 });
-export interface LineChartProps extends BaseChartProps, z.infer<typeof LineChartSchema> {}
+export type LineChartSchema = z.infer<typeof LineChartSchema>;

@@ -1,15 +1,34 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
 
-// --- Radar Chart ---
-export const RadarChartSchema = BaseChartSchema.extend({
-  indicators: z.array(z.object({
-    name: z.string(),
-    max: z.number().optional(),
-  })),
-  series: z.array(z.object({
-    name: z.string(),
-    data: z.array(z.number()),
-  })),
+const RadarIndicatorSchema = z.object({
+  name: z.string(),
+  max: z.number().optional(),
 });
-export interface RadarChartProps extends BaseChartProps, z.infer<typeof RadarChartSchema> {}
+
+const RadarSeriesDataSchema = z.object({
+  value: z.array(z.number()),
+  name: z.string(),
+});
+
+/** Radar series: type 'radar', data as [{ value, name }]. */
+const RadarSeriesSchema = z
+  .object({
+    name: z.string().optional(),
+    type: z.literal('radar').optional(),
+    data: z.array(RadarSeriesDataSchema),
+  })
+  .catchall(z.unknown());
+
+/** Radar chart: ECharts option fragment (radar.indicator, series). */
+export const RadarChartSchema = BaseChartSchema.extend({
+  radar: z
+    .object({
+      indicator: z.array(RadarIndicatorSchema).optional(),
+      shape: z.string().optional(),
+    })
+    .catchall(z.unknown())
+    .optional(),
+  series: z.array(RadarSeriesSchema).optional(),
+});
+export type RadarChartSchema = z.infer<typeof RadarChartSchema>;

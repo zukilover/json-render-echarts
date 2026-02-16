@@ -1,8 +1,8 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
 import { unknownRecord } from '../shared';
 
-// --- Sunburst Chart ---
+/** Sunburst chart: hierarchical data (name, value, optional children). */
 export const SunburstChartSchema = BaseChartSchema.extend({
   data: z.array(z.object({
     name: z.string(),
@@ -10,4 +10,4 @@ export const SunburstChartSchema = BaseChartSchema.extend({
     children: z.array(unknownRecord).optional(),
   })),
 });
-export interface SunburstChartProps extends BaseChartProps, z.infer<typeof SunburstChartSchema> {}
+export type SunburstChartSchema = z.infer<typeof SunburstChartSchema>;

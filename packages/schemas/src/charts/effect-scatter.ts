@@ -1,15 +1,15 @@
 import z from 'zod';
-import { BaseChartSchema, BaseChartProps } from '../base';
+import { BaseChartSchema } from '../base';
 import { AxisSchema } from '../shared';
 
-// --- Effect Scatter Chart ---
+/** Effect scatter chart: optional axes and effectScatter series (rippleEffect). */
 export const EffectScatterChartSchema = BaseChartSchema.extend({
   xAxis: AxisSchema.optional(),
   yAxis: AxisSchema.optional(),
   series: z.array(z.object({
     name: z.string().optional(),
     type: z.literal('effectScatter').default('effectScatter'),
-    symbolSize: z.custom<number | number[]>((v) => typeof v === 'number' || Array.isArray(v)).default(10),
+    symbolSize: z.union([z.number(), z.array(z.number())]).default(10),
     data: z.array(z.array(z.number())),
     rippleEffect: z.object({
       brushType: z.enum(['stroke', 'fill']).optional(),
@@ -18,4 +18,4 @@ export const EffectScatterChartSchema = BaseChartSchema.extend({
     }).optional(),
   })),
 });
-export interface EffectScatterChartProps extends BaseChartProps, z.infer<typeof EffectScatterChartSchema> {}
+export type EffectScatterChartSchema = z.infer<typeof EffectScatterChartSchema>;
