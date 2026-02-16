@@ -1,5 +1,11 @@
 # @json-render-echarts/registry
 
+## 1.1.1
+
+### Patch Changes
+
+- [`e49c94a`](https://github.com/zukilover/json-render-echarts/commit/e49c94ae728542992146fa9fd89dfb19ed1dd077) Thanks [@zukilover](https://github.com/zukilover)! - Standardized the registry with a unified option builder, aligned schemas and types with native ECharts structures, and modernized validation logic across all chart components.
+
 ## 1.1.0
 
 ### Minor Changes
